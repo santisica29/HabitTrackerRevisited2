@@ -63,6 +63,7 @@ namespace HabitTracker
                         Delete();
                         break;
                     case "4":
+                        Update();
                         break;
                 }
 
@@ -84,31 +85,31 @@ namespace HabitTracker
 
                 SqliteDataReader reader = tableCmd.ExecuteReader();
 
-                if (reader.HasRows)
+                while (reader.Read())
                 {
-                    while (reader.Read())
-                    {
-                        tableData.Add(
-                            new CodingRecord
-                            {
-                                Id = reader.GetInt32(0),
-                                Date = DateTime.ParseExact(reader.GetString(1), "dd-MM-yy", new CultureInfo("en-US")),
-                                Quantity = reader.GetInt32(2)
-                            });
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("No rows found");
+                    tableData.Add(
+                        new CodingRecord
+                        {
+                            Id = reader.GetInt32(0),
+                            Date = DateTime.ParseExact(reader.GetString(1), "dd-MM-yy", CultureInfo.InvariantCulture),
+                            Quantity = reader.GetInt32(2)
+                        });
                 }
 
                 connection.Close();
 
                 LineBreak();
 
-                foreach (var cr in tableData)
+                if (tableData.Count == 0)
                 {
-                    Console.WriteLine($"{cr.Id} - {cr.Date.ToString("dd MMMM yy")} - Quantity: {cr.Quantity}");
+                    Console.WriteLine("No rows found");
+                }
+                else
+                {
+                    foreach (var cr in tableData)
+                    {
+                        Console.WriteLine($"{cr.Id} - {cr.Date.ToString("dd MMMM yy")} - Quantity: {cr.Quantity}");
+                    }
                 }
 
                 LineBreak();
@@ -127,7 +128,7 @@ namespace HabitTracker
                 connection.Open();
                 var tableCmd = connection.CreateCommand();
                 tableCmd.CommandText =
-                    $"INSERT INTO coding(date, quantity) VALUES ('{date}', '{quantity}')";
+                    $"INSERT INTO coding(date, quantity) VALUES ('{date}', {quantity})";
 
                 tableCmd.ExecuteNonQuery();
 
@@ -148,17 +149,56 @@ namespace HabitTracker
             {
                 connection.Open();
                 var tableCmd = connection.CreateCommand();
-                tableCmd.CommandText = $"DELETE from coding WHERE Id = '{recordId}'";
+                tableCmd.CommandText = $"DELETE from coding WHERE Id = {recordId}";
                 int rowCount = tableCmd.ExecuteNonQuery();
 
                 if (rowCount == 0)
                 {
-                    Console.WriteLine($"Record with the Id: '{recordId}' doesn't exist.");
+                    Console.WriteLine($"Record with the Id: {recordId} doesn't exist.");
                     Console.ReadKey();
                     Delete();
-                } 
-                    
+                    return;
+                }
+
                 Console.WriteLine("Record deleted successfully!");
+
+                connection.Close();
+            }
+        }
+
+        internal static void Update()
+        {
+            Console.Clear();
+            GetAllRecords();
+
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+
+                var recordId = GetNumberInput("Type Id of the record to update.");
+
+                var checkCmd = connection.CreateCommand();
+                checkCmd.CommandText = $"SELECT EXISTS(SELECT 1 FROM coding WHERE ID = {recordId})";
+                int checkQuery = Convert.ToInt32(checkCmd.ExecuteScalar());
+
+                if (checkQuery == 0)
+                {
+                    Console.WriteLine($"Record with Id {recordId} doesn't exist.\n");
+                    Console.ReadKey();
+                    connection.Close();
+                    Update();
+                    return;
+                }
+
+                string date = GetDateInput();
+                int quantity = GetNumberInput("Select new quantity for the coding record");
+
+                var tableCmd = connection.CreateCommand();
+                tableCmd.CommandText = $"UPDATE coding SET date = '{date}', quantity = {quantity} WHERE Id = {recordId}";
+
+                tableCmd.ExecuteNonQuery();
+
+                Console.WriteLine("Record updated!");
 
                 connection.Close();
             }
