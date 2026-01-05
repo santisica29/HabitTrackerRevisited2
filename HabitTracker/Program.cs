@@ -59,6 +59,11 @@ namespace HabitTracker
                     case "2":
                         Insert();
                         break;
+                    case "3":
+                        Delete();
+                        break;
+                    case "4":
+                        break;
                 }
 
             }
@@ -103,7 +108,7 @@ namespace HabitTracker
 
                 foreach (var cr in tableData)
                 {
-                    Console.WriteLine($"{cr.Id} - {cr.Date} - Quantity: {cr.Quantity}");
+                    Console.WriteLine($"{cr.Id} - {cr.Date.ToString("dd MMMM yy")} - Quantity: {cr.Quantity}");
                 }
 
                 LineBreak();
@@ -130,6 +135,34 @@ namespace HabitTracker
             }
         }
 
+        private static void Delete()
+        {
+            Console.Clear();
+            GetAllRecords();
+
+            var recordId = GetNumberInput("\nType the Id of the record you want to delete. Press 0 to go back to the Main Menu.");
+
+            if (recordId == 0) GetUserInput();
+
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                var tableCmd = connection.CreateCommand();
+                tableCmd.CommandText = $"DELETE from coding WHERE Id = '{recordId}'";
+                int rowCount = tableCmd.ExecuteNonQuery();
+
+                if (rowCount == 0)
+                {
+                    Console.WriteLine($"Record with the Id: '{recordId}' doesn't exist.");
+                    Console.ReadKey();
+                    Delete();
+                } 
+                    
+                Console.WriteLine("Record deleted successfully!");
+
+                connection.Close();
+            }
+        }
         internal static int GetNumberInput(string message)
         {
             Console.WriteLine(message);
