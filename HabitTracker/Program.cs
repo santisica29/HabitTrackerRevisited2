@@ -65,6 +65,9 @@ namespace HabitTracker
                     case "4":
                         Update();
                         break;
+                    default:
+                        Console.WriteLine("Invalid command. Type from 0 to 4");
+                        break;
                 }
 
             }
@@ -221,6 +224,12 @@ namespace HabitTracker
             string dateInput = Console.ReadLine();
 
             if (dateInput == "0") GetUserInput();
+
+            while (!DateTime.TryParseExact(dateInput, "dd-mm-yy", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+            {
+                Console.WriteLine("Invalid date: (Format dd-mm-yy)");
+                dateInput = Console.ReadLine();
+            }
 
             return dateInput;
         }
