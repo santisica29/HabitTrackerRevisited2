@@ -210,7 +210,7 @@ namespace HabitTracker
 
         private static void Insert()
         {
-            var listOfHabits = GetAllHabits();
+            GetAllHabits();
             int habitId;
 
             using (var connection = new SqliteConnection(connectionString))
