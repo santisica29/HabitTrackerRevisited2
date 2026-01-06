@@ -52,6 +52,7 @@ namespace HabitTracker
                     case "0":
                         Console.WriteLine("\nGoodbye");
                         closeApp = true;
+                        Environment.Exit(0);
                         break;
                     case "1":
                         GetAllRecords();
@@ -212,6 +213,12 @@ namespace HabitTracker
 
             string numberInput = Console.ReadLine();
 
+            while (!Int32.TryParse(numberInput, out _) || Convert.ToInt32(numberInput) < 0)
+            {
+                Console.WriteLine("\nInvalid number. Try again.");
+                numberInput = Console.ReadLine();
+            }
+
             int finalInput = Convert.ToInt32(numberInput);
 
             return finalInput;
@@ -225,7 +232,7 @@ namespace HabitTracker
 
             if (dateInput == "0") GetUserInput();
 
-            while (!DateTime.TryParseExact(dateInput, "dd-mm-yy", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+            while (!DateTime.TryParseExact(dateInput, "dd-MM-yy", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
             {
                 Console.WriteLine("Invalid date: (Format dd-mm-yy)");
                 dateInput = Console.ReadLine();
