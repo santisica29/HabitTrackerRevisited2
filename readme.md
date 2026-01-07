@@ -1,10 +1,8 @@
-# Habit Logger - Console App
----
+# Habit Logger - Console App 
 Console based CRUD application to log habits. 
 Developed using C# and SQLite.
 
 ## Requirements: 
----
 - [x] This is an application where you’ll log occurrences of a habit.
 
 - [x] This habit can't be tracked by time (ex. hours of sleep), only by quantity (ex. number of water glasses a day)
@@ -30,7 +28,6 @@ Developed using C# and SQLite.
 - [x] Check for incorrect dates. What happens if a menu option is chosen that's not available? What happens if the users input a string instead of a number?
 
 ## Extra challenges
----
 - [x] Use parametetrized queries to make app more secure 
  
 - [x] To improve the user's experience, when asking for a date input, give the option to type a simple command to add today's date.
@@ -42,7 +39,6 @@ Developed using C# and SQLite.
 - [x] Use DTOs to display information.
 
 ### How the App works
----
 - SQLite connection
 	- First you initialize the database with SQLite.
 	- If no database exists, or the correct table does not exist they will be created on program start.
@@ -57,7 +53,6 @@ Developed using C# and SQLite.
 	- If the user wants to create a log for a habit that doesn't exists he must create the habit first.
 
 ### Lessons Learned
----
 - How to use Sqlite to store data.
 - How ADO.NET works.
 - How parameterized queries prevent SQL Injections.
@@ -65,10 +60,8 @@ Developed using C# and SQLite.
 - How to use DTOs to show the information.
 
 ### Project Info
----
 The C# Academy [Habit Logger Project](https://www.thecsharpacademy.com/project/12/habit-logger).
 
 ### What's Next?
----
 The C# Academy [Coding Tracker](https://www.thecsharpacademy.com/project/13/coding-tracker).
 
