@@ -49,7 +49,6 @@ Developed using C# and SQLite.
 - CRUD Db functions
 	- Users can Create and Delete habits.
 	- Users can Create, Read, Update or Delete habits logs.
-	- Habits logs has to belong to a Habit.
 	- If the user wants to create a log for a habit that doesn't exists he must create the habit first.
 
 ### Lessons Learned
